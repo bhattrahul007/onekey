@@ -1,0 +1,16 @@
+{
+  "extends": "@onekey/typescript-plugin/tsconfig.front.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "noEmit": false
+  },
+  "include": ["src/**/*"],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "out",
+    "dist",
+    "build"
+  ]
+}
