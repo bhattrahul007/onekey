@@ -1,2 +1,2 @@
-export * from "./BaseFloatingInput.types";
-export * from "./BaseFloatingInput";
+export * from './BaseFloatingInput.types';
+export * from './BaseFloatingInput';

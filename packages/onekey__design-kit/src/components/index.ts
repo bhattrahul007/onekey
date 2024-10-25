@@ -1,1 +1,1 @@
-export * from "./base-floating-input";
+export * from './base-floating-input';
