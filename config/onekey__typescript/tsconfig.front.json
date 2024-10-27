@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "esnext",
+    "moduleResolution": "Bundler" /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */,
+    "jsx": "react" /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["jest", "node", "@types/jest", "@testing-library/jest-dom"]
+  },
+  "exclude": ["dist", "build", "temp", "node_modules"],
+  /* Like tsconfig.build.json, but includes test directory and doesnt emit anything */
+  "include": [
+    "src/**/*", // Include all TypeScript and React files in src
+    "vite.config.ts", // Include Vite config file
+    "vite-env.d.ts" // Vite's environment definition
+  ],
+  "composite": true // Required for references to work
+}
