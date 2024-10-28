@@ -24,6 +24,7 @@
   "exports": {
     "./components": "./src/components/index.ts",
     "./styles": "./src/styles/index.ts",
-    "./index.css": "./src/index.css"
+    "./index.css": "./src/index.css",
+    "./core/types": "./src/core/types.ts"
   }
 }
