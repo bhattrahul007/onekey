@@ -53,16 +53,16 @@ export function BaseFloatingInput<T, E>({
   fromDOM = defaultFromDOM,
   ...props
 }: BaseFloatingInputProps<T, E>) {
-  const validator = useValidator(validators);
+  const { validate, results } = useValidator(validators);
 
   // Handle input change and validation
   const handleChange = React.useCallback(
     (nextValue?: T) => {
-      const validationResult = validator.validate(nextValue);
+      const validationResult = validate(nextValue);
       const isValid = validationResult.every((validation) => validation.isValid);
       onChangeProp?.({ value: nextValue, valid: isValid, validationOutcomes: validationResult });
     },
-    [onChangeProp, validator],
+    [onChangeProp, validate],
   );
 
   const [value, setValue] = useControlled({
@@ -73,11 +73,10 @@ export function BaseFloatingInput<T, E>({
 
   return (
     <BaseFloatingInputStyled
+      inputSize={size ?? 'sm'}
       startDecorator={startIcon}
       endDecorator={endIcon}
       sx={{
-        '--onekey-input-minHeight': FloatingInputHeight[size],
-        '--onekey-input-fontSize': '.875rem',
         '--onekey-inputLabel-activeMargin': startIcon ? '-1.25em' : '0em',
         ...sx,
       }}

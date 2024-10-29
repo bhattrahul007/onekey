@@ -1,5 +1,5 @@
+import type { BaseFloatingInputSlotProps } from './BaseFloatingInput.types';
 import { Input, styled } from '@mui/joy';
-
 /**
  * Converts a string value from the DOM to the specified type T.
  *
@@ -39,7 +39,7 @@ export const FloatingInputHeight = {
 /**
  * Styled component for the floating input element.
  */
-export const FloatingInputStyled = styled('input')(() => ({
+export const FloatingInputStyled = styled('input')<BaseFloatingInputSlotProps>(({ inputSize }) => ({
   border: 0,
   outline: 0,
   padding: 0,
@@ -68,6 +68,15 @@ export const FloatingInputStyled = styled('input')(() => ({
     fontSize: '.875rem',
     backgroundColor: '#fff',
     padding: '0 .5rem',
+
+    ...(inputSize === 'md' && {
+      top: '-.4rem',
+    }),
+
+    ...(inputSize === 'lg' && {
+      top: '-.425rem',
+      fontSize: '.9rem',
+    }),
   },
 
   '&:focus ~ label': {
@@ -96,9 +105,16 @@ export const FloatingLabelStyled = styled('label')(() => ({
 /**
  * Styled component for the base floating input wrapper.
  */
-export const BaseFloatingInputStyled = styled(Input)(() => ({
-  minHeight: 'var(--onekey-input-minHeight)',
-  padding: '0 .5rem',
-  marginTop: '.5rem',
-  borderRadius: '.25rem',
-}));
+export const BaseFloatingInputStyled = styled(Input)<BaseFloatingInputSlotProps>(
+  ({ inputSize, sx }) => ({
+    '--onekey-input-minHeight': FloatingInputHeight[inputSize ?? 'sm'],
+    '--onekey-input-fontSize': '.875rem',
+    minHeight: 'var(--onekey-input-minHeight)',
+    padding: '0 .5rem',
+    marginTop: '.5rem',
+    borderRadius: '.25rem',
+    ...(inputSize === 'lg' && {
+      '--onekey-input-fontSize': '.94rem',
+    }),
+  }),
+);

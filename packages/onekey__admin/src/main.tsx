@@ -13,7 +13,7 @@ if (domElement) {
         <BaseFloatingInput
           label="Email"
           placeholder="yourmail@example.com"
-          size="sm"
+          size="md"
           startIcon={<Mail sx={{ width: 20, height: 20 }} />}
         />
       </ThemeProvider>

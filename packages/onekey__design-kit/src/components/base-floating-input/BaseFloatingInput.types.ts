@@ -145,4 +145,8 @@ export interface BaseFloatingInputProps<T, E = 'string'>
   validators?: ReadonlyArray<Validator<T, E>>;
 }
 
+export interface BaseFloatingInputSlotProps {
+  inputSize?: BaseFloatingInputSize;
+}
+
 export default BaseFloatingInputProps;
