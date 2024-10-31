@@ -1,6 +1,11 @@
-import { Validator, ValidationOutcome } from '@onekey/ui-design/core/types';
+import {
+  OnekeyValidator,
+  OnekeyValidationOutcome,
+  OnekeyValidationStatus,
+} from '@onekey/ui-design/core/types';
 import type { InputTypeMap } from '@mui/joy';
 import type * as React from 'react';
+import { ValidationState } from '../../hooks';
 
 // Define the available sizes for the input.
 const sizes = ['sm', 'md', 'lg'] as const;
@@ -15,12 +20,7 @@ export type BaseFloatingInnerInputProps = React.JSX.IntrinsicElements['input'] &
    * The label displayed for the input.
    */
   label: string;
-
-  /**
-   * The size of the input, defined by the available sizes.
-   */
-  inputSize: BaseFloatingInputSize;
-};
+} & BaseFloatingInputSlotProps;
 
 /**
  * Type representing the sizes available for the floating input.
@@ -31,9 +31,8 @@ export type BaseFloatingInputSize = (typeof sizes)[number];
  * Parameters for the onChange event of the input.
  *
  * @template T - The type of the input value.
- * @template E - The type of the validation error message.
  */
-export type OnChangeParams<T, E> = {
+export type OnChangeParams<T> = {
   /**
    * The current value of the input.
    */
@@ -42,12 +41,17 @@ export type OnChangeParams<T, E> = {
   /**
    * Indicates whether the current value is valid.
    */
-  valid: boolean;
+  isValid: boolean;
 
   /**
    * An array of validation outcomes from the validators.
    */
-  validationOutcomes: ReadonlyArray<ValidationOutcome<E>>;
+  validationOutcomes: ReadonlyArray<OnekeyValidationOutcome>;
+
+  event: {
+    valueChanged?: boolean; // Indicates if the value has changed
+    valueValidated?: boolean; // Indicates if the value has been validated
+  };
 };
 
 /**
@@ -63,12 +67,7 @@ export interface BaseFloatingInputStyledProps {
 /**
  * Styled properties for the inner input element.
  */
-export interface BaseFloatingInnerInputStyledProps {
-  /**
-   * The size of the inner input.
-   */
-  inputSize: BaseFloatingInputSize;
-}
+export interface BaseFloatingInnerInputStyledProps extends BaseFloatingInputSlotProps {}
 
 /**
  * Interface for transforming DOM values to/from the input value type.
@@ -92,15 +91,30 @@ export interface DomTransformer<T> {
 }
 
 /**
+ * Options for rendering help text based on validation state.
+ */
+export type RenderHelpTextOptions = {
+  showFeedback: boolean; // Indicates if feedback should be shown
+
+  feedbackStatus: OnekeyValidationStatus; // Current validation status
+
+  validationState: ValidationState; // Current state of validation
+};
+
+/**
+ * Specifies when validation occurs for the input.
+ */
+export type InputValidationTrigger = 'blur' | 'typing';
+
+/**
  * Props for the base floating input component.
  *
  * @template T - The type of the input value.
- * @template E - The type of the validation error message (defaults to 'string').
  */
-export interface BaseFloatingInputProps<T, E = 'string'>
+export interface BaseFloatingInputProps<T>
   extends Omit<
       InputTypeMap['props'],
-      'value' | 'startDecorator' | 'endDecorator' | 'size' | 'onChange' | 'defaultValue'
+      'value' | 'startDecorator' | 'endDecorator' | 'size' | 'onChange' | 'defaultValue' | 'onBlur'
     >,
     DomTransformer<T> {
   /**
@@ -137,15 +151,42 @@ export interface BaseFloatingInputProps<T, E = 'string'>
    * Callback invoked when the value changes.
    * @param values - The parameters for the change event.
    */
-  onChange?: (values: OnChangeParams<T, E>) => void;
+  onChange?: (values: OnChangeParams<T>) => void;
+
+  /**
+   * Callback invoked when the input loses focus.
+   */
+  onBlur?: (values: OnChangeParams<T>) => void;
 
   /**
    * An array of validators for the input value.
    */
-  validators?: ReadonlyArray<Validator<T, E>>;
+  validators?: ReadonlyArray<OnekeyValidator<T>>;
+
+  /**
+   * Determines whether to show feedback after the input has been touched.
+   */
+  showFeedbackOnceTouched?: boolean;
+
+  /**
+   * A function to render help text based on validation state.
+   * @param options - Options for rendering help text.
+   */
+  renderHelpText?: (options: RenderHelpTextOptions) => React.ReactNode;
+
+  /**
+   * Specifies when validation should be triggered.
+   */
+  validationTrigger?: InputValidationTrigger[];
 }
 
+/**
+ * Props for the slot used in the base floating input.
+ */
 export interface BaseFloatingInputSlotProps {
+  /**
+   * The size of the input, defined by the available sizes.
+   */
   inputSize?: BaseFloatingInputSize;
 }
 
