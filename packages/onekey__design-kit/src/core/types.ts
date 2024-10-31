@@ -5,7 +5,7 @@
  * - 'error': The validation has failed.
  * - 'success': The validation has passed successfully.
  */
-export type ValidationState = 'initial' | 'error' | 'success';
+export type OnekeyValidationStatus = 'info' | 'error' | 'success';
 
 /**
  * A type representing a validation function.
@@ -13,15 +13,14 @@ export type ValidationState = 'initial' | 'error' | 'success';
  * This type extracts the `validate` method from the `Validator` interface,
  * allowing for the definition of custom validation functions.
  */
-export type ValidatorFunction<T, E> = Pick<Validator<T, E>, 'validate'>;
+export type OnekeyValidatorFunction<T> = Pick<OnekeyValidator<T>, 'validate'>;
 
 /**
  * An interface representing a generic input validator.
  *
  * @template T - The type of the value to validate.
- * @template E - The type of the message returned when validation fails (defaults to 'string').
  */
-export interface Validator<T, E = string> {
+export interface OnekeyValidator<T> {
   /**
    * Retrieves the unique code associated with this validator.
    *
@@ -32,9 +31,9 @@ export interface Validator<T, E = string> {
   /**
    * Retrieves the message associated with this validator.
    *
-   * @returns {E} The failure message if validation fails.
+   * @returns {string} The failure message if validation fails.
    */
-  getMessage: () => E;
+  getMessage: () => string;
 
   /**
    * Validates the provided value.
@@ -47,10 +46,8 @@ export interface Validator<T, E = string> {
 
 /**
  * Represents the result of a validation check.
- *
- * @template E - The type of the message returned when validation fails.
  */
-export type ValidationOutcome<E> = {
+export type OnekeyValidationOutcome = {
   /**
    * The unique code associated with the validation result.
    */
@@ -59,7 +56,7 @@ export type ValidationOutcome<E> = {
   /**
    * An optional message providing additional information about the validation outcome.
    */
-  message?: E;
+  message?: string;
 
   /**
    * Indicates whether the validation check was successful.
