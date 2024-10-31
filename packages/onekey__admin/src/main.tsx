@@ -1,6 +1,7 @@
+import { MinLengthValidator } from '@onekey/ui-design/core/validators';
 import { BaseFloatingInput } from '@onekey/ui-design/components';
 import { ThemeProvider } from '@onekey/ui-design/styles';
-import { Mail } from '@mui/icons-material';
+import { Mail } from 'lucide-react';
 import ReactDOM from 'react-dom/client';
 import '@onekey/ui-design/index.css';
 import * as React from 'react';
@@ -11,10 +12,15 @@ if (domElement) {
     <React.StrictMode>
       <ThemeProvider>
         <BaseFloatingInput
+          onChange={(values) => {
+            console.log(values);
+          }}
           label="Email"
           placeholder="yourmail@example.com"
-          size="md"
-          startIcon={<Mail sx={{ width: 20, height: 20 }} />}
+          size="sm"
+          startIcon={<Mail size={'18px'} />}
+          validationTrigger={['typing']}
+          validators={[new MinLengthValidator(8)]}
         />
       </ThemeProvider>
     </React.StrictMode>,
