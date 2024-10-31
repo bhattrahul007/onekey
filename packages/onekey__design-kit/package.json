@@ -12,8 +12,8 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@mui/icons-material": "^6.1.5",
     "@mui/joy": "^5.0.0-beta.48",
+    "lucide-react": "^0.454.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -25,6 +25,8 @@
     "./components": "./src/components/index.ts",
     "./styles": "./src/styles/index.ts",
     "./index.css": "./src/index.css",
-    "./core/types": "./src/core/types.ts"
+    "./core/validators": "./src/core/validators/index.ts",
+    "./core/types": "./src/core/types.ts",
+    "./hooks": "./src/hooks/index.ts"
   }
 }
