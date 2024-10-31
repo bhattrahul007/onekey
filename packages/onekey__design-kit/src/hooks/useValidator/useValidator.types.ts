@@ -1,62 +1,70 @@
-import type { ValidationOutcome, ValidationState } from '@onekey/ui-design/core/types';
+import type { OnekeyValidationOutcome } from '@onekey/ui-design/core/types';
 
 /**
- * Represents the current state of a validator.
- *
- * @template E - The type of the error message or additional information associated with the validator.
+ * Represents the result of a validation process.
  */
-export type ValidatorState<E> = {
-  /**
-   * The current validation state of the validator.
-   */
-  status: ValidationState;
-
-  /**
-   * Indicates whether the validation was successful.
-   */
+export type ValidationResult = {
+  /** Indicates whether the input is valid. */
   isValid: boolean;
 
-  /**
-   * A unique identifier for the validator.
-   */
+  /** A code representing the validation result. */
   code: string;
 
-  /**
-   * An optional message providing details about the validation failure.
-   * This can be of any type specified by E.
-   */
-  message?: E;
+  /** An optional message providing additional context about the validation result. */
+  message?: string;
+};
 
+/**
+ * Represents the current state of validation for an input.
+ */
+export type ValidationState = {
   /**
    * Indicates whether the input has been interacted with by the user.
    */
   isTouched: boolean;
+
+  /**
+   * Indicates whether the validator has been validated at least once.
+   */
+  isValidated: boolean;
+
+  /**
+   * A collection of validation results from the current validation state.
+   */
+  outcomes: Set<ValidationResult>;
 };
 
 /**
- * Type definition for the validation function used in the validator hook.
+ * Type definition for the validation function used in the validation hook.
  *
  * @template T - The type of the input value to validate.
- * @template E - The type of the error message or additional information associated with the validator.
  * @param value - The input value to validate.
  * @returns A readonly array of validation outcomes.
  */
-export type ValidatorHookValidateFn<T, E> = (value?: T) => ReadonlyArray<ValidationOutcome<E>>;
+export type ValidationFunction<T> = (value?: T) => Array<ValidationResult>;
 
 /**
- * The return type of the useValidator hook.
+ * The return type of the useValidation hook.
  *
  * @template T - The type of the input value to validate.
- * @template E - The type of the error message or additional information associated with the validator.
  */
-export type UseValidatorReturn<T, E> = {
+export type UseValidationReturn<T> = {
   /**
    * The validation function that processes an input value and returns validation outcomes.
    */
-  validate: ValidatorHookValidateFn<T, E>;
+  validate: ValidationFunction<T>;
 
   /**
-   * A readonly collection of validation outcomes from the current validation state.
+   * The current state of validation for the input.
    */
-  results: ReadonlySet<ValidationOutcome<E>>;
+  validationState: ValidationState;
+
+  /**
+   * Marks the input as touched, triggering validation feedback.
+   */
+  touch: () => void;
+
+  hasError: () => boolean;
+
+  isSuccess: () => boolean;
 };
