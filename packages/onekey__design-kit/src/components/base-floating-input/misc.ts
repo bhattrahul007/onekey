@@ -1,4 +1,7 @@
-import type { BaseFloatingInputSlotProps } from './BaseFloatingInput.types';
+import type {
+  BaseFloatingInputSlotProps,
+  BaseFloatingInputStyledProps,
+} from './BaseFloatingInput.types';
 import { Input, styled } from '@mui/joy';
 /**
  * Converts a string value from the DOM to the specified type T.
@@ -39,54 +42,57 @@ export const FloatingInputHeight = {
 /**
  * Styled component for the floating input element.
  */
-export const FloatingInputStyled = styled('input')<BaseFloatingInputSlotProps>(({ inputSize }) => ({
-  border: 0,
-  outline: 0,
-  padding: 0,
-  width: '100%',
-  height: '100%',
-  backgroundColor: 'transparent',
-  fontFamily: 'inherit',
-  fontSize: 'var(--onekey-input-fontSize, 1em)',
-  fontStyle: 'inherit',
-  fontWeight: 'inherit',
-  lineHeight: 'inherit',
-  textOverflow: 'ellipsis',
+export const FloatingInputStyled = styled('input')<BaseFloatingInputSlotProps>(
+  ({ theme, inputSize }) => ({
+    border: 0,
+    outline: 0,
+    padding: 0,
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'transparent',
+    fontFamily: 'inherit',
+    fontSize: 'var(--onekey-input-fontSize, 1em)',
+    fontStyle: 'inherit',
+    fontWeight: 'inherit',
+    lineHeight: 'inherit',
+    textOverflow: 'ellipsis',
 
-  '&::placeholder': {
-    opacity: 0,
-    transition: '0.1s ease-out',
-  },
+    '&::placeholder': {
+      opacity: 0,
+      transition: '0.1s ease-out',
+    },
 
-  '&:focus::placeholder': {
-    opacity: 1,
-  },
+    '&:focus::placeholder': {
+      opacity: 1,
+    },
 
-  '&:focus ~ label, &:not(:placeholder-shown) ~ label, &:-webkit-autofill ~ label': {
-    top: '-0.5em',
-    left: 'var(--onekey-inputLabel-activeMargin, 0em)',
-    fontSize: '.875rem',
-    backgroundColor: '#fff',
-    padding: '0 .5rem',
+    '&:focus ~ label, &:not(:placeholder-shown) ~ label, &:-webkit-autofill ~ label': {
+      top: '-0.5em',
+      left: 'var(--onekey-inputLabel-activeMargin, 0em)',
+      fontSize: '.875rem',
+      backgroundColor: '#fff',
+      padding: '0 .5rem',
+      color: theme.vars.palette.primary[500],
 
-    ...(inputSize === 'md' && {
-      top: '-.4rem',
-    }),
+      ...(inputSize === 'md' && {
+        top: '-.4rem',
+      }),
 
-    ...(inputSize === 'lg' && {
-      top: '-.425rem',
-      fontSize: '.9rem',
-    }),
-  },
+      ...(inputSize === 'lg' && {
+        top: '-.425rem',
+        fontSize: '.9rem',
+      }),
+    },
 
-  '&:focus ~ label': {
-    color: 'var(--Input-focusedHighlight)',
-  },
+    '&:focus ~ label': {
+      color: 'var(--Input-focusedHighlight)',
+    },
 
-  '&:-webkit-autofill': {
-    alignSelf: 'stretch', // To fill the height of the root slot
-  },
-}));
+    '&:-webkit-autofill': {
+      alignSelf: 'stretch', // To fill the height of the root slot
+    },
+  }),
+);
 
 /**
  * Styled component for the floating label associated with the input.
@@ -94,6 +100,7 @@ export const FloatingInputStyled = styled('input')<BaseFloatingInputSlotProps>((
 export const FloatingLabelStyled = styled('label')(() => ({
   position: 'absolute',
   top: 'calc((var(--onekey-input-minHeight) - 1em) / 2)',
+  color: 'var(--onekey-inputLabel-color, inherit)',
   left: 0,
   fontSize: '1em',
   fontWeight: 500,
@@ -105,16 +112,51 @@ export const FloatingLabelStyled = styled('label')(() => ({
 /**
  * Styled component for the base floating input wrapper.
  */
-export const BaseFloatingInputStyled = styled(Input)<BaseFloatingInputSlotProps>(
-  ({ inputSize, sx }) => ({
-    '--onekey-input-minHeight': FloatingInputHeight[inputSize ?? 'sm'],
-    '--onekey-input-fontSize': '.875rem',
-    minHeight: 'var(--onekey-input-minHeight)',
-    padding: '0 .5rem',
-    marginTop: '.5rem',
-    borderRadius: '.25rem',
-    ...(inputSize === 'lg' && {
-      '--onekey-input-fontSize': '.94rem',
-    }),
+export const BaseFloatingInputStyled = styled(Input, {
+  shouldForwardProp: (prop) => prop !== 'rootSize',
+})<BaseFloatingInputStyledProps>(({ theme, rootSize }) => ({
+  '--onekey-inputLabel-color': theme.vars.palette.neutral[500],
+  '--onekey-input-minHeight': FloatingInputHeight[rootSize ?? 'sm'],
+  '--onekey-input-fontSize': '.875rem',
+  '--onekey-input-defaultBorderColor': theme.vars.palette.neutral[400],
+  ...(rootSize === 'lg' && {
+    '--onekey-input-fontSize': '.94rem',
   }),
-);
+
+  '&.Mui-focused::before, &:focus-within::before': {
+    '--onekey-input-defaultBorderColor': theme.vars.palette.primary[500],
+  },
+
+  minHeight: 'var(--onekey-input-minHeight)',
+  padding: '0 .5rem',
+  marginTop: '.75rem',
+  borderRadius: '.25rem',
+  marginLeft: '2rem',
+  marginRight: '2rem',
+  borderWidth: '1px',
+  borderColor: 'var(--onekey-input-defaultBorderColor)',
+  boxSizing: 'border-box',
+
+  '&::before': {
+    boxSizing: 'border-box',
+    content: '""',
+    display: 'block',
+    position: 'absolute',
+    pointerEvents: 'none',
+    top: '0',
+    left: '0',
+    right: '0',
+    bottom: '0',
+    zIndex: '1',
+    borderRadius: 'inherit',
+    margin: 'calc(var(--variant-borderWidth, 0px) * -1)',
+    boxShadow:
+      'var(--Input-focusedInset, inset) 0 0 0 calc(1 * var(--Input-focusedThickness)) var(--onekey-input-defaultBorderColor)',
+  },
+
+  '&.Mui-focused, &:focus-within': {
+    borderWidth: '1px',
+    boxShadow: 'none',
+    borderColor: theme.vars.palette.primary[500],
+  },
+}));
