@@ -18,8 +18,6 @@ declare module '@mui/joy/styles' {
 }
 
 export const theme = extendTheme({
-  colorSchemes: {},
-
   components: {
     JoyTypography: {
       defaultProps: {
